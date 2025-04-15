@@ -1,10 +1,13 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
-import mongoose from "mongoose";
+import productRoutes from "./routes/product.routes.js";
 dotenv.config();
 
 const app = express();
+app.use(express.json());
+app.use("/api/products", productRoutes);
+
 
 app.listen(3000, () => {
   const db = connectDB();
@@ -12,6 +15,3 @@ app.listen(3000, () => {
   console.log("Server is running on port 3000, Hello!");
 });
 
-
-app.get("/products", (req, res) => {
-});
