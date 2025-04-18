@@ -1,14 +1,15 @@
-import React from "react";
+import React, { use } from "react";
 import {
   Box,
   Button,
   Container,
   Heading,
   Input,
-  useColorMode,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
+import { useProductStore } from "../store/product";
+import { useToast } from "@chakra-ui/react";
 
 function CreatePage() {
   const [newProduct, setNewProduct] = React.useState({
@@ -17,10 +18,29 @@ function CreatePage() {
     image: "",
   });
 
-  function handleAddProduct() {
-    // Here you would typically send the new product to your backend
-    console.log("New Product Added:", newProduct);
-    // Reset the form after adding the product
+  const { createProduct } = useProductStore();
+  const toast = useToast();
+
+  async function handleAddProduct() {
+    const { success, message } = await createProduct(newProduct);
+    if (!success) {
+      toast({
+        title: "Error",
+        description: message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+    toast({
+      title: "Success",
+      description: message,
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
+
     setNewProduct({ name: "", price: "", image: "" });
   }
 
